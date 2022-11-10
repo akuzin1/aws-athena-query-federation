@@ -75,6 +75,7 @@ import org.apache.commons.codec.Charsets;
 import org.joda.time.DateTimeZone;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -368,7 +369,8 @@ public class BlockUtils
                 case DECIMAL:
                     DecimalVector dVector = ((DecimalVector) vector);
                     if (value instanceof Double) {
-                        BigDecimal bdVal = new BigDecimal((double) value);
+                        // BigDecimal bdVal = new BigDecimal((double) value);
+                        BigDecimal bdVal = new BigDecimal((double) value, new MathContext(dVector.getPrecision(), RoundingMode.HALF_UP));
                         bdVal = bdVal.setScale(dVector.getScale(), RoundingMode.HALF_UP);
                         dVector.setSafe(pos, bdVal);
                     }

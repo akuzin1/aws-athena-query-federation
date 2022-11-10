@@ -25,7 +25,12 @@ import com.amazonaws.athena.connector.lambda.domain.predicate.ConstraintProjecto
 import org.apache.arrow.vector.DecimalVector;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
 import java.math.RoundingMode;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Used to write a value and apply constraints for a particular column to the row currently being processed.
@@ -39,6 +44,9 @@ import java.math.RoundingMode;
 public class DecimalFieldWriter
         implements FieldWriter
 {
+    
+    static final Logger LOGGER = LoggerFactory.getLogger("SDAFASDFASDFASDF");
+
     private final NullableDecimalHolder holder = new NullableDecimalHolder();
     private final DecimalExtractor extractor;
     private final DecimalVector vector;
@@ -78,7 +86,13 @@ public class DecimalFieldWriter
     {
         extractor.extract(context, holder);
         if (holder.isSet > 0) {
+            //BigInteger asdfBigInt = holder.value.unscaledValue();
             BigDecimal dVal = holder.value.setScale(vector.getScale(), RoundingMode.HALF_UP);
+            LOGGER.info("Scale: {}", vector.getScale());
+            LOGGER.info("Scale BD: {}", holder.value.scale());
+            //BigDecimal dVal = (new BigDecimal(asdfBigInt, vector.getScale(), new MathContext(vector.getPrecision(), RoundingMode.HALF_UP)));
+            LOGGER.info("Scale dVal: {}", dVal.scale());
+            LOGGER.info("Precision dVal: {}", dVal.precision());
             vector.setSafe(rowNum, dVal);
         }
         else {
