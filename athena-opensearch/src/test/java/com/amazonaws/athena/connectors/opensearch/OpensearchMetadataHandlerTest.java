@@ -62,13 +62,13 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
 import static org.mockito.ArgumentMatchers.nullable;
 
 public class OpensearchMetadataHandlerTest
         extends TestBase
 {
-    private DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", MYSQL_NAME,
+    private DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", OPENSEARCH_NAME,
             "opensearch://jdbc:opensearch://hostname/user=A&password=B");
     private OpensearchMetadataHandler opensearchMetadataHandler;
     private JdbcConnectionFactory jdbcConnectionFactory;

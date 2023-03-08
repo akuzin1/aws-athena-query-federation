@@ -31,7 +31,7 @@ import org.apache.arrow.util.VisibleForTesting;
 
 import java.util.Map;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
 
 class OpensearchMetadataHandlerFactory
         implements JdbcMetadataHandlerFactory
@@ -39,7 +39,7 @@ class OpensearchMetadataHandlerFactory
     @Override
     public String getEngine()
     {
-        return MYSQL_NAME;
+        return OPENSEARCH_NAME;
     }
 
     @Override

@@ -45,9 +45,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_DEFAULT_PORT;
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_DRIVER_CLASS;
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_DEFAULT_PORT;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_DRIVER_CLASS;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
 
 /**
  * Data handler, user must have necessary permissions to read from necessary tables.
@@ -57,7 +57,7 @@ public class OpensearchRecordHandler
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpensearchRecordHandler.class);
 
-    private static final String MYSQL_QUOTE_CHARACTER = "`";
+    private static final String OPENSEARCH_QUOTE_CHARACTER = "`";
 
     private final JdbcSplitQueryBuilder jdbcSplitQueryBuilder;
 
@@ -68,18 +68,18 @@ public class OpensearchRecordHandler
      */
     public OpensearchRecordHandler(java.util.Map<String, String> configOptions)
     {
-        this(JDBCUtil.getSingleDatabaseConfigFromEnv(MYSQL_NAME, configOptions), configOptions);
+        this(JDBCUtil.getSingleDatabaseConfigFromEnv(OPENSEARCH_NAME, configOptions), configOptions);
     }
 
     public OpensearchRecordHandler(DatabaseConnectionConfig databaseConnectionConfig, java.util.Map<String, String> configOptions)
     {
-        this(databaseConnectionConfig, new GenericJdbcConnectionFactory(databaseConnectionConfig, OpensearchMetadataHandler.JDBC_PROPERTIES, new DatabaseConnectionInfo(MYSQL_DRIVER_CLASS, MYSQL_DEFAULT_PORT)), configOptions);
+        this(databaseConnectionConfig, new GenericJdbcConnectionFactory(databaseConnectionConfig, OpensearchMetadataHandler.JDBC_PROPERTIES, new DatabaseConnectionInfo(OPENSEARCH_DRIVER_CLASS, OPENSEARCH_DEFAULT_PORT)), configOptions);
     }
 
     public OpensearchRecordHandler(DatabaseConnectionConfig databaseConnectionConfig, JdbcConnectionFactory jdbcConnectionFactory, java.util.Map<String, String> configOptions)
     {
         this(databaseConnectionConfig, AmazonS3ClientBuilder.defaultClient(), AWSSecretsManagerClientBuilder.defaultClient(), AmazonAthenaClientBuilder.defaultClient(),
-                jdbcConnectionFactory, new MySqlQueryStringBuilder(MYSQL_QUOTE_CHARACTER), configOptions);
+                jdbcConnectionFactory, new MySqlQueryStringBuilder(OPENSEARCH_QUOTE_CHARACTER), configOptions);
     }
 
     @VisibleForTesting

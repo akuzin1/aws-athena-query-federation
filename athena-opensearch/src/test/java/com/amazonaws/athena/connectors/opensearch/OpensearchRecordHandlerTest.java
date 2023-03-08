@@ -49,7 +49,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collections;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
 import static org.mockito.ArgumentMatchers.nullable;
 
 public class OpensearchRecordHandlerTest
@@ -73,7 +73,7 @@ public class OpensearchRecordHandlerTest
         this.jdbcConnectionFactory = Mockito.mock(JdbcConnectionFactory.class);
         Mockito.when(this.jdbcConnectionFactory.getConnection(nullable(JdbcCredentialProvider.class))).thenReturn(this.connection);
         jdbcSplitQueryBuilder = new MySqlQueryStringBuilder("`");
-        final DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", MYSQL_NAME,
+        final DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", OPENSEARCH_NAME,
                 "opensearch://jdbc:opensearch://hostname/user=A&password=B");
 
         this.mySqlRecordHandler = new OpensearchRecordHandler(databaseConnectionConfig, amazonS3, secretsManager, athena, jdbcConnectionFactory, jdbcSplitQueryBuilder, java.util.Map.of());

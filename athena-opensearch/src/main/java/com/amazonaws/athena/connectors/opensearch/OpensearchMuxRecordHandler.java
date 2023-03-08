@@ -32,14 +32,14 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.util.Map;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
 
 class MySqlMuxRecordHandlerFactory implements JdbcRecordHandlerFactory
 {
     @Override
     public String getEngine()
     {
-        return MYSQL_NAME;
+        return OPENSEARCH_NAME;
     }
 
     @Override
