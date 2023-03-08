@@ -1,6 +1,6 @@
 /*-
  * #%L
- * athena-mysql
+ * athena-opensearch
  * %%
  * Copyright (C) 2019 Amazon Web Services
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.amazonaws.athena.connectors.mysql;
+package com.amazonaws.athena.connectors.opensearch;
 
 import com.amazonaws.athena.connector.lambda.data.BlockAllocator;
 import com.amazonaws.athena.connector.lambda.data.BlockAllocatorImpl;
@@ -62,14 +62,14 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.amazonaws.athena.connectors.mysql.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
 import static org.mockito.ArgumentMatchers.nullable;
 
 public class OpensearchMetadataHandlerTest
         extends TestBase
 {
     private DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", MYSQL_NAME,
-            "mysql://jdbc:mysql://hostname/user=A&password=B");
+            "opensearch://jdbc:opensearch://hostname/user=A&password=B");
     private OpensearchMetadataHandler opensearchMetadataHandler;
     private JdbcConnectionFactory jdbcConnectionFactory;
     private Connection connection;

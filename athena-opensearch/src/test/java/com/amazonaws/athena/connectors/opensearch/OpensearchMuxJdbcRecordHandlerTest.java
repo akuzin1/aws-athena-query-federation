@@ -1,6 +1,6 @@
 /*-
  * #%L
- * athena-mysql
+ * athena-opensearch
  * %%
  * Copyright (C) 2019 Amazon Web Services
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.amazonaws.athena.connectors.mysql;
+package com.amazonaws.athena.connectors.opensearch;
 
 import com.amazonaws.athena.connector.lambda.QueryStatusChecker;
 import com.amazonaws.athena.connector.lambda.data.BlockSpiller;
@@ -56,14 +56,14 @@ public class MySqlMuxJdbcRecordHandlerTest
     public void setup()
     {
         this.mySqlRecordHandler = Mockito.mock(OpensearchRecordHandler.class);
-        this.recordHandlerMap = Collections.singletonMap("mysql", this.mySqlRecordHandler);
+        this.recordHandlerMap = Collections.singletonMap("opensearch", this.mySqlRecordHandler);
         this.amazonS3 = Mockito.mock(AmazonS3.class);
         this.secretsManager = Mockito.mock(AWSSecretsManager.class);
         this.athena = Mockito.mock(AmazonAthena.class);
         this.queryStatusChecker = Mockito.mock(QueryStatusChecker.class);
         this.jdbcConnectionFactory = Mockito.mock(JdbcConnectionFactory.class);
-        DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", "mysql",
-                "mysql://jdbc:mysql://hostname/${testSecret}", "testSecret");
+        DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", "opensearch",
+                "opensearch://jdbc:opensearch://hostname/${testSecret}", "testSecret");
         this.jdbcRecordHandler = new MySqlMuxRecordHandler(this.amazonS3, this.secretsManager, this.athena, this.jdbcConnectionFactory, databaseConnectionConfig, this.recordHandlerMap, java.util.Map.of());
     }
 
@@ -73,7 +73,7 @@ public class MySqlMuxJdbcRecordHandlerTest
     {
         BlockSpiller blockSpiller = Mockito.mock(BlockSpiller.class);
         ReadRecordsRequest readRecordsRequest = Mockito.mock(ReadRecordsRequest.class);
-        Mockito.when(readRecordsRequest.getCatalogName()).thenReturn("mysql");
+        Mockito.when(readRecordsRequest.getCatalogName()).thenReturn("opensearch");
         this.jdbcRecordHandler.readWithConstraint(blockSpiller, readRecordsRequest, queryStatusChecker);
         Mockito.verify(this.mySqlRecordHandler, Mockito.times(1)).readWithConstraint(Mockito.eq(blockSpiller), Mockito.eq(readRecordsRequest), Mockito.eq(queryStatusChecker));
     }
@@ -93,13 +93,13 @@ public class MySqlMuxJdbcRecordHandlerTest
             throws SQLException
     {
         ReadRecordsRequest readRecordsRequest = Mockito.mock(ReadRecordsRequest.class);
-        Mockito.when(readRecordsRequest.getCatalogName()).thenReturn("mysql");
+        Mockito.when(readRecordsRequest.getCatalogName()).thenReturn("opensearch");
         Connection jdbcConnection = Mockito.mock(Connection.class);
         TableName tableName = new TableName("testSchema", "tableName");
         Schema schema = Mockito.mock(Schema.class);
         Constraints constraints = Mockito.mock(Constraints.class);
         Split split = Mockito.mock(Split.class);
-        this.jdbcRecordHandler.buildSplitSql(jdbcConnection, "mysql", tableName, schema, constraints, split);
-        Mockito.verify(this.mySqlRecordHandler, Mockito.times(1)).buildSplitSql(Mockito.eq(jdbcConnection), Mockito.eq("mysql"), Mockito.eq(tableName), Mockito.eq(schema), Mockito.eq(constraints), Mockito.eq(split));
+        this.jdbcRecordHandler.buildSplitSql(jdbcConnection, "opensearch", tableName, schema, constraints, split);
+        Mockito.verify(this.mySqlRecordHandler, Mockito.times(1)).buildSplitSql(Mockito.eq(jdbcConnection), Mockito.eq("opensearch"), Mockito.eq(tableName), Mockito.eq(schema), Mockito.eq(constraints), Mockito.eq(split));
     }
 }

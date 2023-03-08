@@ -70,8 +70,8 @@ Resources:
           spill_prefix: !Ref SpillPrefix
           default: !Ref DefaultConnectionString
       FunctionName: !Ref LambdaFunctionName
-      Handler: "com.amazonaws.athena.connectors.mysql.MySqlMuxCompositeHandler"
-      CodeUri: "./target/athena-mysql-2022.47.1.jar"
+      Handler: "com.amazonaws.athena.connectors.opensearch.MySqlMuxCompositeHandler"
+      CodeUri: "./target/athena-opensearch-2022.47.1.jar"
       Description: "Enables Amazon Athena to communicate with MySQL using JDBC"
       Runtime: java11
       Timeout: !Ref LambdaTimeout

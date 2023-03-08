@@ -1,6 +1,6 @@
 /*-
  * #%L
- * athena-mysql
+ * athena-opensearch
  * %%
  * Copyright (C) 2019 Amazon Web Services
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.amazonaws.athena.connectors.mysql;
+package com.amazonaws.athena.connectors.opensearch;
 
 import com.amazonaws.athena.connector.lambda.QueryStatusChecker;
 import com.amazonaws.athena.connector.lambda.data.BlockAllocator;

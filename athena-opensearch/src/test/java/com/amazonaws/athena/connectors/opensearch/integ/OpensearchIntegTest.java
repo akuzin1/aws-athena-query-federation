@@ -1,6 +1,6 @@
 /*-
  * #%L
- * athena-mysql
+ * athena-opensearch
  * %%
  * Copyright (C) 2019 - 2021 Amazon Web Services
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.amazonaws.athena.connectors.mysql.integ;
+package com.amazonaws.athena.connectors.opensearch.integ;
 
 import com.amazonaws.athena.connector.integ.IntegrationTestBase;
 import com.amazonaws.athena.connector.integ.clients.CloudFormationClient;
@@ -62,8 +62,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.amazonaws.athena.connectors.mysql.MySqlConstants.MYSQL_DRIVER_CLASS;
-import static com.amazonaws.athena.connectors.mysql.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_DRIVER_CLASS;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -78,10 +78,10 @@ public class MySqlIntegTest extends IntegrationTestBase
     private final String secretArn;
     private final String username;
     private final String password;
-    private final String mysqlDbName;
-    private final Number mysqlDbPort;
-    private final String mysqlTableMovies;
-    private final String mysqlTableBday;
+    private final String opensearchDbName;
+    private final Number opensearchDbPort;
+    private final String opensearchTableMovies;
+    private final String opensearchTableBday;
     private final String lambdaFunctionName;
     private final String dbInstanceName;
     private final Map<String, String> environmentVars;
@@ -100,15 +100,15 @@ public class MySqlIntegTest extends IntegrationTestBase
         password = secretsManagerCredentials.getPassword();
         Map<String, Object> userSettings = getUserSettings().orElseThrow(() ->
                 new RuntimeException("user_settings attribute must be provided in test-config.json file."));
-        mysqlDbName = (String) userSettings.get("mysql_db_name");
-        mysqlDbPort = (Number) userSettings.get("mysql_db_port");
-        mysqlTableMovies = (String) userSettings.get("mysql_table_movies");
-        mysqlTableBday = (String) userSettings.get("mysql_table_bday");
+        opensearchDbName = (String) userSettings.get("opensearch_db_name");
+        opensearchDbPort = (Number) userSettings.get("opensearch_db_port");
+        opensearchTableMovies = (String) userSettings.get("opensearch_table_movies");
+        opensearchTableBday = (String) userSettings.get("opensearch_table_bday");
         lambdaFunctionName = getLambdaFunctionName();
-        dbInstanceName = "integ-mysql-instance-" + UUID.randomUUID();
+        dbInstanceName = "integ-opensearch-instance-" + UUID.randomUUID();
         environmentVars = new HashMap<>();
         jdbcProperties = ImmutableMap.of("databaseTerm", "SCHEMA");
-        databaseConnectionInfo = new DatabaseConnectionInfo(MYSQL_DRIVER_CLASS, (Integer) mysqlDbPort);
+        databaseConnectionInfo = new DatabaseConnectionInfo(MYSQL_DRIVER_CLASS, (Integer) opensearchDbPort);
     }
 
     /**
@@ -165,9 +165,9 @@ public class MySqlIntegTest extends IntegrationTestBase
                 .removalPolicy(RemovalPolicy.DESTROY)
                 .deleteAutomatedBackups(Boolean.TRUE)
                 .storageEncrypted(Boolean.FALSE)
-                .port(mysqlDbPort)
+                .port(opensearchDbPort)
                 .instanceIdentifier(dbInstanceName)
-                .engine(DatabaseInstanceEngine.mysql(MySqlInstanceEngineProps.builder()
+                .engine(DatabaseInstanceEngine.opensearch(MySqlInstanceEngineProps.builder()
                         .version(MysqlEngineVersion.VER_8_0_20)
                         .build()))
                 .storageType(StorageType.GP2)
@@ -212,7 +212,7 @@ public class MySqlIntegTest extends IntegrationTestBase
      */
     private void setEnvironmentVars(Endpoint endpoint)
     {
-        String connectionString = String.format("mysql://jdbc:mysql://%s:%s/mysql?user=%s&password=%s",
+        String connectionString = String.format("opensearch://jdbc:opensearch://%s:%s/opensearch?user=%s&password=%s",
                 endpoint.getAddress(), endpoint.getPort(), username, password);
         String connectionStringTag = lambdaFunctionName + "_connection_string";
         environmentVars.put("default", connectionString);
@@ -226,10 +226,10 @@ public class MySqlIntegTest extends IntegrationTestBase
             throws Exception
     {
         logger.info("----------------------------------------------------");
-        logger.info("Setting up DB Schema: {}", mysqlDbName);
+        logger.info("Setting up DB Schema: {}", opensearchDbName);
         logger.info("----------------------------------------------------");
 
-        JdbcTableUtils jdbcUtils = new JdbcTableUtils(lambdaFunctionName, new TableName(mysqlDbName, mysqlTableMovies), environmentVars, jdbcProperties, MYSQL_NAME);
+        JdbcTableUtils jdbcUtils = new JdbcTableUtils(lambdaFunctionName, new TableName(opensearchDbName, opensearchTableMovies), environmentVars, jdbcProperties, MYSQL_NAME);
         jdbcUtils.createDbSchema(databaseConnectionInfo);
 
         jdbcUtils = new JdbcTableUtils(lambdaFunctionName, new TableName(INTEG_TEST_DATABASE_NAME, TEST_DATATYPES_TABLE_NAME), environmentVars, jdbcProperties, MYSQL_NAME);
@@ -287,10 +287,10 @@ public class MySqlIntegTest extends IntegrationTestBase
             throws Exception
     {
         logger.info("----------------------------------------------------");
-        logger.info("Setting up DB table: {}", mysqlTableMovies);
+        logger.info("Setting up DB table: {}", opensearchTableMovies);
         logger.info("----------------------------------------------------");
 
-        JdbcTableUtils moviesTable = new JdbcTableUtils(lambdaFunctionName, new TableName(mysqlDbName, mysqlTableMovies), environmentVars, jdbcProperties, MYSQL_NAME);
+        JdbcTableUtils moviesTable = new JdbcTableUtils(lambdaFunctionName, new TableName(opensearchDbName, opensearchTableMovies), environmentVars, jdbcProperties, MYSQL_NAME);
         moviesTable.createTable("year INTEGER, title VARCHAR(25), director VARCHAR(25), lead_actor VARCHAR(25)", databaseConnectionInfo);
         moviesTable.insertRow("2014, 'Interstellar', 'Christopher Nolan', 'Matthew McConaughey'", databaseConnectionInfo);
         moviesTable.insertRow("1986, 'Aliens', 'James Cameron', 'Sigourney Weaver'", databaseConnectionInfo);
@@ -303,10 +303,10 @@ public class MySqlIntegTest extends IntegrationTestBase
             throws Exception
     {
         logger.info("----------------------------------------------------");
-        logger.info("Setting up DB table: {}", mysqlTableBday);
+        logger.info("Setting up DB table: {}", opensearchTableBday);
         logger.info("----------------------------------------------------");
 
-        JdbcTableUtils bdayTable = new JdbcTableUtils(lambdaFunctionName, new TableName(mysqlDbName, mysqlTableBday), environmentVars, jdbcProperties, MYSQL_NAME);
+        JdbcTableUtils bdayTable = new JdbcTableUtils(lambdaFunctionName, new TableName(opensearchDbName, opensearchTableBday), environmentVars, jdbcProperties, MYSQL_NAME);
         bdayTable.createTable("first_name VARCHAR(10), last_name VARCHAR(10), birthday DATE", databaseConnectionInfo);
         bdayTable.insertRow("'Joe', 'Schmoe', '2002-05-05'", databaseConnectionInfo);
         bdayTable.insertRow("'Jane', 'Doe', '2005-10-12'", databaseConnectionInfo);
@@ -383,7 +383,7 @@ public class MySqlIntegTest extends IntegrationTestBase
 
         List dbNames = listDatabases();
         logger.info("Databases: {}", dbNames);
-        assertTrue("DB not found.", dbNames.contains(mysqlDbName));
+        assertTrue("DB not found.", dbNames.contains(opensearchDbName));
     }
 
     @Test
@@ -394,13 +394,13 @@ public class MySqlIntegTest extends IntegrationTestBase
         logger.info("Executing listTablesIntegTest");
         logger.info("-----------------------------------");
 
-        List tableNames = listTables(mysqlDbName);
+        List tableNames = listTables(opensearchDbName);
         logger.info("Tables: {}", tableNames);
         assertEquals("Incorrect number of tables found.", 2, tableNames.size());
-        assertTrue(String.format("Table not found: %s.", mysqlTableMovies),
-                tableNames.contains(mysqlTableMovies));
-        assertTrue(String.format("Table not found: %s.", mysqlTableBday),
-                tableNames.contains(mysqlTableBday));
+        assertTrue(String.format("Table not found: %s.", opensearchTableMovies),
+                tableNames.contains(opensearchTableMovies));
+        assertTrue(String.format("Table not found: %s.", opensearchTableBday),
+                tableNames.contains(opensearchTableBday));
     }
 
     @Test
@@ -411,7 +411,7 @@ public class MySqlIntegTest extends IntegrationTestBase
         logger.info("Executing listTableSchemaIntegTest");
         logger.info("--------------------------------------");
 
-        Map schema = describeTable(mysqlDbName, mysqlTableMovies);
+        Map schema = describeTable(opensearchDbName, opensearchTableMovies);
         schema.remove("partition_name");
         schema.remove("partition_schema_name");
         logger.info("Schema: {}", schema);
@@ -435,7 +435,7 @@ public class MySqlIntegTest extends IntegrationTestBase
         logger.info("--------------------------------------------------");
 
         String query = String.format("select title from %s.%s.%s where year > 2010;",
-                lambdaFunctionName, mysqlDbName, mysqlTableMovies);
+                lambdaFunctionName, opensearchDbName, opensearchTableMovies);
         List<Row> rows = startQueryExecution(query).getResultSet().getRows();
         if (!rows.isEmpty()) {
             // Remove the column-header row
@@ -458,7 +458,7 @@ public class MySqlIntegTest extends IntegrationTestBase
 
         String query = String.format(
                 "select first_name from %s.%s.%s where birthday between date('2005-10-01') and date('2005-10-31');",
-                lambdaFunctionName, mysqlDbName, mysqlTableBday);
+                lambdaFunctionName, opensearchDbName, opensearchTableBday);
         List<Row> rows = startQueryExecution(query).getResultSet().getRows();
         if (!rows.isEmpty()) {
             // Remove the column-header row

@@ -1,6 +1,6 @@
 /*-
  * #%L
- * athena-mysql
+ * athena-opensearch
  * %%
  * Copyright (C) 2019 Amazon Web Services
  * %%
@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.amazonaws.athena.connectors.mysql;
+package com.amazonaws.athena.connectors.opensearch;
 
 import com.amazonaws.athena.connector.lambda.domain.Split;
 import com.amazonaws.athena.connector.lambda.domain.TableName;
@@ -45,9 +45,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.amazonaws.athena.connectors.mysql.MySqlConstants.MYSQL_DEFAULT_PORT;
-import static com.amazonaws.athena.connectors.mysql.MySqlConstants.MYSQL_DRIVER_CLASS;
-import static com.amazonaws.athena.connectors.mysql.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_DEFAULT_PORT;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_DRIVER_CLASS;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
 
 /**
  * Data handler, user must have necessary permissions to read from necessary tables.

@@ -1,6 +1,6 @@
 /*-
  * #%L
- * athena-mysql
+ * athena-opensearch
  * %%
  * Copyright (C) 2019 Amazon Web Services
  * %%
@@ -18,7 +18,7 @@
  * #L%
  */
 
-package com.amazonaws.athena.connectors.mysql;
+package com.amazonaws.athena.connectors.opensearch;
 
 import com.amazonaws.athena.connectors.jdbc.MultiplexingJdbcRecordHandler;
 import com.amazonaws.athena.connectors.jdbc.connection.DatabaseConnectionConfig;
@@ -32,7 +32,7 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.util.Map;
 
-import static com.amazonaws.athena.connectors.mysql.MySqlConstants.MYSQL_NAME;
+import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.MYSQL_NAME;
 
 class MySqlMuxRecordHandlerFactory implements JdbcRecordHandlerFactory
 {

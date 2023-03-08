@@ -1,6 +1,6 @@
 /*-
  * #%L
- * athena-mysql
+ * athena-opensearch
  * %%
  * Copyright (C) 2019 - 2022 Amazon Web Services
  * %%
@@ -17,12 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package com.amazonaws.athena.connectors.mysql;
+package com.amazonaws.athena.connectors.opensearch;
 
 public final class MySqlConstants
 {
-    public static final String MYSQL_NAME = "mysql";
-    public static final String MYSQL_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+    public static final String MYSQL_NAME = "opensearch";
+    public static final String MYSQL_DRIVER_CLASS = "com.opensearch.cj.jdbc.Driver";
     public static final int MYSQL_DEFAULT_PORT = 3306;
 
     private MySqlConstants() {}
