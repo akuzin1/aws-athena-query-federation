@@ -87,6 +87,7 @@ public class GenericJdbcConnectionFactory
         Class.forName(databaseConnectionInfo.getDriverClassName()).newInstance();
 
         // create connection
+        LOGGER.info("Derived JDBC string: {}, JdbcProperties: {}", derivedJdbcString, this.jdbcProperties); 
         return DriverManager.getConnection(derivedJdbcString, this.jdbcProperties);
     }
 

@@ -94,11 +94,17 @@ public class OpensearchRecordHandler
     public PreparedStatement buildSplitSql(Connection jdbcConnection, String catalogName, TableName tableName, Schema schema, Constraints constraints, Split split)
             throws SQLException
     {
-        PreparedStatement preparedStatement = jdbcSplitQueryBuilder.buildSql(jdbcConnection, null, tableName.getSchemaName(), tableName.getTableName(), schema, constraints, split);
+        PreparedStatement preparedStatement = jdbcSplitQueryBuilder.buildSql(jdbcConnection, null, null, tableName.getTableName(), schema, constraints, split);
 
         // Disable fetching all rows.
-        preparedStatement.setFetchSize(Integer.MIN_VALUE);
+        // preparedStatement.setFetchSize(Integer.MIN_VALUE);
 
         return preparedStatement;
+    }
+
+    @Override
+    protected java.util.Optional<Boolean> getAutoCommit()
+    {
+      return java.util.Optional.empty();
     }
 }

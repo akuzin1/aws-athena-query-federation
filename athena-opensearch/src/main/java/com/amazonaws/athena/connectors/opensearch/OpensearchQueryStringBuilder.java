@@ -22,6 +22,8 @@ package com.amazonaws.athena.connectors.opensearch;
 import com.amazonaws.athena.connector.lambda.domain.Split;
 import com.amazonaws.athena.connectors.jdbc.manager.JdbcSplitQueryBuilder;
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,9 @@ import java.util.List;
 public class OpensearchQueryStringBuilder
         extends JdbcSplitQueryBuilder
 {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpensearchQueryStringBuilder.class);
+
     public OpensearchQueryStringBuilder(final String quoteCharacters)
     {
         super(quoteCharacters);
@@ -55,9 +60,10 @@ public class OpensearchQueryStringBuilder
 
         if (OpensearchMetadataHandler.ALL_PARTITIONS.equals(partitionName)) {
             // No partitions
+            LOGGER.info("Inside sdijasadadfssadsasd");
             return String.format(" FROM %s ", tableName);
         }
-
+        LOGGER.info("Outside asdafsasdadsffasdf");
         return String.format(" FROM %s PARTITION(%s) ", tableName, partitionName);
     }
 

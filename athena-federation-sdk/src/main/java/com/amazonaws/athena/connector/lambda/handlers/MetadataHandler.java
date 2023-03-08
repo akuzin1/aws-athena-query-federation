@@ -366,6 +366,8 @@ public abstract class MetadataHandler
             //Even though our table doesn't support complex layouts, partitioning or metadata, we need to convey that there is at least
             //1 partition to read as part of the query or Athena will assume partition pruning found no candidate layouts to read.
             Block partitions = BlockUtils.newBlock(allocator, PARTITION_ID_COL, Types.MinorType.INT.getType(), 1);
+            logger.info("_____________________________________________________________________");
+            logger.info("Partitions: {}", partitions);
             return new GetTableLayoutResponse(request.getCatalogName(), request.getTableName(), partitions);
         }
 
@@ -383,6 +385,8 @@ public abstract class MetadataHandler
             partitions.constrain(constraintEvaluator);
             SimpleBlockWriter blockWriter = new SimpleBlockWriter(partitions);
             getPartitions(blockWriter, request, queryStatusChecker);
+            logger.info("_____________________________________________________________________");
+            logger.info("Partitions: {}", partitions);
             return new GetTableLayoutResponse(request.getCatalogName(), request.getTableName(), partitions);
         }
     }

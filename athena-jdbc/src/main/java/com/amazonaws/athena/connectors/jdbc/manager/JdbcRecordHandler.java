@@ -135,6 +135,11 @@ public abstract class JdbcRecordHandler
         return null;
     }
 
+    protected java.util.Optional<Boolean> getAutoCommit()
+    {
+      return java.util.Optional.of(false);
+    }
+
     @Override
     public void readWithConstraint(BlockSpiller blockSpiller, ReadRecordsRequest readRecordsRequest, QueryStatusChecker queryStatusChecker)
             throws Exception
@@ -142,7 +147,9 @@ public abstract class JdbcRecordHandler
         LOGGER.info("{}: Catalog: {}, table {}, splits {}", readRecordsRequest.getQueryId(), readRecordsRequest.getCatalogName(), readRecordsRequest.getTableName(),
                 readRecordsRequest.getSplit().getProperties());
         try (Connection connection = this.jdbcConnectionFactory.getConnection(getCredentialProvider())) {
-            connection.setAutoCommit(false); // For consistency. This is needed to be false to enable streaming for some database types.
+            if (this.getAutoCommit().isPresent()) {
+                connection.setAutoCommit(this.getAutoCommit().get()); // For consistency. This is needed to be false to enable streaming for some database types.
+            }
             try (PreparedStatement preparedStatement = buildSplitSql(connection, readRecordsRequest.getCatalogName(), readRecordsRequest.getTableName(),
                     readRecordsRequest.getSchema(), readRecordsRequest.getConstraints(), readRecordsRequest.getSplit());
                     ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -168,8 +175,9 @@ public abstract class JdbcRecordHandler
                     rowsReturnedFromDatabase++;
                 }
                 LOGGER.info("{} rows returned by database.", rowsReturnedFromDatabase);
-
-                connection.commit();
+                if (this.getAutoCommit().isPresent()) {
+                    connection.commit();
+                }
             }
         }
     }

@@ -60,7 +60,7 @@ import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPE
 public class OpensearchMetadataHandler
         extends JdbcMetadataHandler
 {
-    static final Map<String, String> JDBC_PROPERTIES = ImmutableMap.of("databaseTerm", "SCHEMA");
+    static final Map<String, String> JDBC_PROPERTIES = ImmutableMap.of();
     static final String BLOCK_PARTITION_COLUMN_NAME = "partition_name";
     static final String ALL_PARTITIONS = "*";
     static final String PARTITION_COLUMN_NAME = "partition_name";
