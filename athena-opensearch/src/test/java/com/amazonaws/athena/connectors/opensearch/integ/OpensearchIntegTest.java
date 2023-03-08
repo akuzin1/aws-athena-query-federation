@@ -370,7 +370,7 @@ public class OpensearchIntegTest extends IntegrationTestBase
 
     @Override
     public void selectVarcharListTypeTest() {
-        // not supported! MySQL doesn't support ARRAY types.
+        // not supported! Opensearch doesn't support ARRAY types.
     }
 
     @Test

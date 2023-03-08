@@ -60,7 +60,7 @@ import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPE
 import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_NAME;
 
 /**
- * Handles metadata for MySQL. User must have access to `schemata`, `tables`, `columns`, `partitions` tables in
+ * Handles metadata for Opensearch. User must have access to `schemata`, `tables`, `columns`, `partitions` tables in
  * information_schema.
  */
 public class OpensearchMetadataHandler
