@@ -99,7 +99,8 @@
         <module>athena-jdbc</module>
         <module>athena-federation-sdk-tools</module>
         <module>athena-mysql</module>
-        <module>athena-postgresql</module>
+        <module>athena-opensearch</module>
+        <!--<module>athena-postgresql</module>
         <module>athena-redshift</module>
         <module>athena-udfs</module>
         <module>athena-vertica</module>
@@ -120,7 +121,7 @@
         <module>athena-db2</module>
         <module>athena-msk</module>
         <module>athena-kafka</module>
-        <module>athena-gcs</module>
+        <module>athena-gcs</module>-->
     </modules>
     <dependencies>
         <dependency>
