@@ -41,7 +41,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Map;
 
-public class MySqlMuxJdbcRecordHandlerTest
+public class OpensearchMuxJdbcRecordHandlerTest
 {
     private Map<String, JdbcRecordHandler> recordHandlerMap;
     private OpensearchRecordHandler mySqlRecordHandler;
@@ -64,7 +64,7 @@ public class MySqlMuxJdbcRecordHandlerTest
         this.jdbcConnectionFactory = Mockito.mock(JdbcConnectionFactory.class);
         DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", "opensearch",
                 "opensearch://jdbc:opensearch://hostname/${testSecret}", "testSecret");
-        this.jdbcRecordHandler = new MySqlMuxRecordHandler(this.amazonS3, this.secretsManager, this.athena, this.jdbcConnectionFactory, databaseConnectionConfig, this.recordHandlerMap, java.util.Map.of());
+        this.jdbcRecordHandler = new OpensearchMuxRecordHandler(this.amazonS3, this.secretsManager, this.athena, this.jdbcConnectionFactory, databaseConnectionConfig, this.recordHandlerMap, java.util.Map.of());
     }
 
     @Test

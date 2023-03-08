@@ -23,13 +23,13 @@ import com.amazonaws.athena.connectors.jdbc.MultiplexingJdbcCompositeHandler;
 
 /**
  * Boilerplate composite handler that allows us to use a single Lambda function for both
- * Metadata and Data. In this case we just compose {@link MySqlMuxMetadataHandler} and {@link MySqlMuxRecordHandler}.
+ * Metadata and Data. In this case we just compose {@link OpensearchMuxMetadataHandler} and {@link OpensearchMuxRecordHandler}.
  */
-public class MySqlMuxCompositeHandler
+public class OpensearchMuxCompositeHandler
         extends MultiplexingJdbcCompositeHandler
 {
-    public MySqlMuxCompositeHandler() throws java.lang.ReflectiveOperationException
+    public OpensearchMuxCompositeHandler() throws java.lang.ReflectiveOperationException
     {
-        super(MySqlMuxMetadataHandler.class, MySqlMuxRecordHandler.class, OpensearchMetadataHandler.class, OpensearchRecordHandler.class);
+        super(OpensearchMuxMetadataHandler.class, OpensearchMuxRecordHandler.class, OpensearchMetadataHandler.class, OpensearchRecordHandler.class);
     }
 }

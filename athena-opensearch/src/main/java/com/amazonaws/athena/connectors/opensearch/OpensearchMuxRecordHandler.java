@@ -32,9 +32,9 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.util.Map;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_NAME;
 
-class MySqlMuxRecordHandlerFactory implements JdbcRecordHandlerFactory
+class OpensearchMuxRecordHandlerFactory implements JdbcRecordHandlerFactory
 {
     @Override
     public String getEngine()
@@ -49,15 +49,15 @@ class MySqlMuxRecordHandlerFactory implements JdbcRecordHandlerFactory
     }
 }
 
-public class MySqlMuxRecordHandler extends MultiplexingJdbcRecordHandler
+public class OpensearchMuxRecordHandler extends MultiplexingJdbcRecordHandler
 {
-    public MySqlMuxRecordHandler(java.util.Map<String, String> configOptions)
+    public OpensearchMuxRecordHandler(java.util.Map<String, String> configOptions)
     {
-        super(new MySqlMuxRecordHandlerFactory(), configOptions);
+        super(new OpensearchMuxRecordHandlerFactory(), configOptions);
     }
 
     @VisibleForTesting
-    MySqlMuxRecordHandler(AmazonS3 amazonS3, AWSSecretsManager secretsManager, AmazonAthena athena, JdbcConnectionFactory jdbcConnectionFactory,
+    OpensearchMuxRecordHandler(AmazonS3 amazonS3, AWSSecretsManager secretsManager, AmazonAthena athena, JdbcConnectionFactory jdbcConnectionFactory,
             DatabaseConnectionConfig databaseConnectionConfig, Map<String, JdbcRecordHandler> recordHandlerMap, java.util.Map<String, String> configOptions)
     {
         super(amazonS3, secretsManager, athena, jdbcConnectionFactory, databaseConnectionConfig, recordHandlerMap, configOptions);

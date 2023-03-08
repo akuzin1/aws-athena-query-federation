@@ -15,9 +15,9 @@
     "availability_zones": ["<Zone 1>", "<Zone 2>"]  /* A list consisting of at least one AZ (e.g. us-east-1a) */
   },
   "user_settings" : {                     /* User customizable settings */
-    "opensearch_db_name": "<DB Name>",         /* Name of the Db used by the MySql integration tests */
-    "opensearch_db_port": "<Port (Integer)>",    /* Port number associated with the MySql instance endpoint */
-    "opensearch_table_movies": "<Table Name>",       /* MySql table name */
-    "opensearch_table_bday": "<Table Name>"          /* MySql table name */
+    "opensearch_db_name": "<DB Name>",         /* Name of the Db used by the Opensearch integration tests */
+    "opensearch_db_port": "<Port (Integer)>",    /* Port number associated with the Opensearch instance endpoint */
+    "opensearch_table_movies": "<Table Name>",       /* Opensearch table name */
+    "opensearch_table_bday": "<Table Name>"          /* Opensearch table name */
   }
 }

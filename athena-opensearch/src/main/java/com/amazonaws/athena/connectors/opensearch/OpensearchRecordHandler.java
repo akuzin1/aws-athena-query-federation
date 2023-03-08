@@ -45,9 +45,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_DEFAULT_PORT;
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_DRIVER_CLASS;
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_DEFAULT_PORT;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_DRIVER_CLASS;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_NAME;
 
 /**
  * Data handler, user must have necessary permissions to read from necessary tables.
@@ -64,7 +64,7 @@ public class OpensearchRecordHandler
     /**
      * Instantiates handler to be used by Lambda function directly.
      *
-     * Recommend using {@link MySqlMuxCompositeHandler} instead.
+     * Recommend using {@link OpensearchMuxCompositeHandler} instead.
      */
     public OpensearchRecordHandler(java.util.Map<String, String> configOptions)
     {
@@ -79,7 +79,7 @@ public class OpensearchRecordHandler
     public OpensearchRecordHandler(DatabaseConnectionConfig databaseConnectionConfig, JdbcConnectionFactory jdbcConnectionFactory, java.util.Map<String, String> configOptions)
     {
         this(databaseConnectionConfig, AmazonS3ClientBuilder.defaultClient(), AWSSecretsManagerClientBuilder.defaultClient(), AmazonAthenaClientBuilder.defaultClient(),
-                jdbcConnectionFactory, new MySqlQueryStringBuilder(OPENSEARCH_QUOTE_CHARACTER), configOptions);
+                jdbcConnectionFactory, new OpensearchQueryStringBuilder(OPENSEARCH_QUOTE_CHARACTER), configOptions);
     }
 
     @VisibleForTesting

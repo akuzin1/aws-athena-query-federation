@@ -19,11 +19,11 @@
  */
 package com.amazonaws.athena.connectors.opensearch;
 
-public final class MySqlConstants
+public final class OpensearchConstants
 {
     public static final String OPENSEARCH_NAME = "opensearch";
     public static final String OPENSEARCH_DRIVER_CLASS = "com.opensearch.cj.jdbc.Driver";
     public static final int OPENSEARCH_DEFAULT_PORT = 3306;
 
-    private MySqlConstants() {}
+    private OpensearchConstants() {}
 }

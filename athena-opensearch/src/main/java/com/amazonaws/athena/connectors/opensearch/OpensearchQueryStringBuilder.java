@@ -27,14 +27,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Extends {@link JdbcSplitQueryBuilder} and implements MySql specific SQL clauses for split.
+ * Extends {@link JdbcSplitQueryBuilder} and implements Opensearch specific SQL clauses for split.
  *
- * MySql provides named partitions which can be used in a FROM clause.
+ * Opensearch provides named partitions which can be used in a FROM clause.
  */
-public class MySqlQueryStringBuilder
+public class OpensearchQueryStringBuilder
         extends JdbcSplitQueryBuilder
 {
-    public MySqlQueryStringBuilder(final String quoteCharacters)
+    public OpensearchQueryStringBuilder(final String quoteCharacters)
     {
         super(quoteCharacters);
     }

@@ -31,7 +31,7 @@ import org.apache.arrow.util.VisibleForTesting;
 
 import java.util.Map;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_NAME;
 
 class OpensearchMetadataHandlerFactory
         implements JdbcMetadataHandlerFactory
@@ -49,16 +49,16 @@ class OpensearchMetadataHandlerFactory
     }
 }
 
-public class MySqlMuxMetadataHandler
+public class OpensearchMuxMetadataHandler
         extends MultiplexingJdbcMetadataHandler
 {
-    public MySqlMuxMetadataHandler(java.util.Map<String, String> configOptions)
+    public OpensearchMuxMetadataHandler(java.util.Map<String, String> configOptions)
     {
         super(new OpensearchMetadataHandlerFactory(), configOptions);
     }
 
     @VisibleForTesting
-    protected MySqlMuxMetadataHandler(AWSSecretsManager secretsManager, AmazonAthena athena, JdbcConnectionFactory jdbcConnectionFactory,
+    protected OpensearchMuxMetadataHandler(AWSSecretsManager secretsManager, AmazonAthena athena, JdbcConnectionFactory jdbcConnectionFactory,
           Map<String, JdbcMetadataHandler> metadataHandlerMap, DatabaseConnectionConfig databaseConnectionConfig, java.util.Map<String, String> configOptions)
     {
         super(secretsManager, athena, jdbcConnectionFactory, metadataHandlerMap, databaseConnectionConfig, configOptions);

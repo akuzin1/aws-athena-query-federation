@@ -49,7 +49,7 @@ import software.amazon.awscdk.services.iam.PolicyDocument;
 import software.amazon.awscdk.services.rds.Credentials;
 import software.amazon.awscdk.services.rds.DatabaseInstance;
 import software.amazon.awscdk.services.rds.DatabaseInstanceEngine;
-import software.amazon.awscdk.services.rds.MySqlInstanceEngineProps;
+import software.amazon.awscdk.services.rds.OpensearchInstanceEngineProps;
 import software.amazon.awscdk.services.rds.MysqlEngineVersion;
 import software.amazon.awscdk.services.rds.StorageType;
 import software.amazon.awscdk.services.secretsmanager.Secret;
@@ -62,17 +62,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_DRIVER_CLASS;
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_DRIVER_CLASS;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Integration-tests for the MySql (JDBC) connector using the Integration-test module.
+ * Integration-tests for the Opensearch (JDBC) connector using the Integration-test module.
  */
-public class MySqlIntegTest extends IntegrationTestBase
+public class OpensearchIntegTest extends IntegrationTestBase
 {
-    private static final Logger logger = LoggerFactory.getLogger(MySqlIntegTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(OpensearchIntegTest.class);
 
     private final App theApp;
     private final String secretArn;
@@ -90,7 +90,7 @@ public class MySqlIntegTest extends IntegrationTestBase
 
     private CloudFormationClient cloudFormationClient;
 
-    public MySqlIntegTest()
+    public OpensearchIntegTest()
     {
         theApp = new App();
         SecretsManagerCredentials secretsManagerCredentials = getSecretCredentials().orElseThrow(() ->
@@ -112,15 +112,15 @@ public class MySqlIntegTest extends IntegrationTestBase
     }
 
     /**
-     * Creates a MySql RDS Instance used for the integration tests.
+     * Creates a Opensearch RDS Instance used for the integration tests.
      */
     @BeforeClass
     @Override
     protected void setUp() throws Exception
     {
-        cloudFormationClient = new CloudFormationClient(theApp, getMySqlStack());
+        cloudFormationClient = new CloudFormationClient(theApp, getOpensearchStack());
         try {
-            // Create the CloudFormation stack for the MySql DB instance.
+            // Create the CloudFormation stack for the Opensearch DB instance.
             cloudFormationClient.createStack();
             // Get DB instance's host and port information and set the environment variables needed for the Lambda.
             setEnvironmentVars(getInstanceData());
@@ -137,7 +137,7 @@ public class MySqlIntegTest extends IntegrationTestBase
     }
 
     /**
-     * Deletes a CloudFormation stack for the MySql RDS Instance.
+     * Deletes a CloudFormation stack for the Opensearch RDS Instance.
      */
     @AfterClass
     @Override
@@ -145,43 +145,43 @@ public class MySqlIntegTest extends IntegrationTestBase
     {
         // Invoke the framework's cleanUp().
         super.cleanUp();
-        // Delete the CloudFormation stack for the MySql DB instance.
+        // Delete the CloudFormation stack for the Opensearch DB instance.
         cloudFormationClient.deleteStack();
     }
 
     /**
-     * Gets the CloudFormation stack for the MySql RDS Instance.
-     * @return Stack object for the MySql RDS Instance.
+     * Gets the CloudFormation stack for the Opensearch RDS Instance.
+     * @return Stack object for the Opensearch RDS Instance.
      */
-    private Stack getMySqlStack()
+    private Stack getOpensearchStack()
     {
         Stack stack = Stack.Builder.create(theApp, dbInstanceName).build();
 
         ConnectorVpcAttributes vpcAttributes = getVpcAttributes()
                 .orElseThrow(() -> new RuntimeException("vpc_configuration must be specified in test-config.json"));
 
-        DatabaseInstance.Builder.create(stack, "MySqlInstance")
+        DatabaseInstance.Builder.create(stack, "OpensearchInstance")
                 .publiclyAccessible(Boolean.TRUE)
                 .removalPolicy(RemovalPolicy.DESTROY)
                 .deleteAutomatedBackups(Boolean.TRUE)
                 .storageEncrypted(Boolean.FALSE)
                 .port(opensearchDbPort)
                 .instanceIdentifier(dbInstanceName)
-                .engine(DatabaseInstanceEngine.opensearch(MySqlInstanceEngineProps.builder()
+                .engine(DatabaseInstanceEngine.opensearch(OpensearchInstanceEngineProps.builder()
                         .version(MysqlEngineVersion.VER_8_0_20)
                         .build()))
                 .storageType(StorageType.GP2)
                 .allocatedStorage(20)
                 .instanceType(new InstanceType("t2.micro"))
                 .credentials(Credentials.fromSecret(Secret
-                        .fromSecretCompleteArn(stack, "MySqlSecret", secretArn)))
-                .vpc(Vpc.fromVpcAttributes(stack, "MySqlVpcConfig", VpcAttributes.builder()
+                        .fromSecretCompleteArn(stack, "OpensearchSecret", secretArn)))
+                .vpc(Vpc.fromVpcAttributes(stack, "OpensearchVpcConfig", VpcAttributes.builder()
                         .vpcId(vpcAttributes.getVpcId())
                         .privateSubnetIds(vpcAttributes.getPrivateSubnetIds())
                         .availabilityZones(vpcAttributes.getAvailabilityZones())
                         .build()))
                 .securityGroups(Collections.singletonList(SecurityGroup
-                        .fromSecurityGroupId(stack, "MySqlVpcSecurityGroup",
+                        .fromSecurityGroupId(stack, "OpensearchVpcSecurityGroup",
                                 vpcAttributes.getSecurityGroupId())))
                 .build();
 
@@ -189,7 +189,7 @@ public class MySqlIntegTest extends IntegrationTestBase
     }
 
     /**
-     * Gets the MySql RDS Instance endpoint information. All exceptions thrown here will be caught in the
+     * Gets the Opensearch RDS Instance endpoint information. All exceptions thrown here will be caught in the
      * calling function.
      * @return Endpoint object containing the DB instance's domain and port information.
      */

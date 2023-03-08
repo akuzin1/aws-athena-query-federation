@@ -62,7 +62,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static com.amazonaws.athena.connectors.opensearch.MySqlConstants.OPENSEARCH_NAME;
+import static com.amazonaws.athena.connectors.opensearch.OpensearchConstants.OPENSEARCH_NAME;
 import static org.mockito.ArgumentMatchers.nullable;
 
 public class OpensearchMetadataHandlerTest

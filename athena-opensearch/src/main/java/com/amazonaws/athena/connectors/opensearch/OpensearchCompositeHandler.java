@@ -25,12 +25,12 @@ import com.amazonaws.athena.connector.lambda.handlers.CompositeHandler;
  * Boilerplate composite handler that allows us to use a single Lambda function for both
  * Metadata and Data. In this case we just compose {@link OpensearchMetadataHandler} and {@link OpensearchRecordHandler}.
  *
- * Recommend using {@link MySqlMuxCompositeHandler} instead.
+ * Recommend using {@link OpensearchMuxCompositeHandler} instead.
  */
-public class MySqlCompositeHandler
+public class OpensearchCompositeHandler
         extends CompositeHandler
 {
-    public MySqlCompositeHandler()
+    public OpensearchCompositeHandler()
     {
         super(new OpensearchMetadataHandler(System.getenv()), new OpensearchRecordHandler(System.getenv()));
     }

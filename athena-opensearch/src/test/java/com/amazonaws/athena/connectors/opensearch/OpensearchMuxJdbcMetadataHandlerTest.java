@@ -43,7 +43,7 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.nullable;
 
-public class MySqlMuxJdbcMetadataHandlerTest
+public class OpensearchMuxJdbcMetadataHandlerTest
 {
     private Map<String, JdbcMetadataHandler> metadataHandlerMap;
     private OpensearchMetadataHandler opensearchMetadataHandler;
@@ -68,7 +68,7 @@ public class MySqlMuxJdbcMetadataHandlerTest
         this.jdbcConnectionFactory = Mockito.mock(JdbcConnectionFactory.class);
         DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", "fakedatabase",
                 "fakedatabase://jdbc:fakedatabase://hostname/${testSecret}", "testSecret");
-        this.jdbcMetadataHandler = new MySqlMuxMetadataHandler(this.secretsManager, this.athena, this.jdbcConnectionFactory, this.metadataHandlerMap, databaseConnectionConfig, java.util.Map.of());
+        this.jdbcMetadataHandler = new OpensearchMuxMetadataHandler(this.secretsManager, this.athena, this.jdbcConnectionFactory, this.metadataHandlerMap, databaseConnectionConfig, java.util.Map.of());
     }
 
     @Test
