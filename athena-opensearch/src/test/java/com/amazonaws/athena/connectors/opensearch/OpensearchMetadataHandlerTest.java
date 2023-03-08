@@ -111,7 +111,6 @@ public class OpensearchMetadataHandlerTest
         GetTableLayoutRequest getTableLayoutRequest = new GetTableLayoutRequest(this.federatedIdentity, "testQueryId", "testCatalogName", tableName, constraints, partitionSchema, partitionCols);
 
         PreparedStatement preparedStatement = Mockito.mock(PreparedStatement.class);
-        Mockito.when(this.connection.prepareStatement(OpensearchMetadataHandler.GET_PARTITIONS_QUERY)).thenReturn(preparedStatement);
 
         String[] columns = {"partition_name"};
         int[] types = {Types.VARCHAR};
@@ -153,7 +152,6 @@ public class OpensearchMetadataHandlerTest
         GetTableLayoutRequest getTableLayoutRequest = new GetTableLayoutRequest(this.federatedIdentity, "testQueryId", "testCatalogName", tableName, constraints, partitionSchema, partitionCols);
 
         PreparedStatement preparedStatement = Mockito.mock(PreparedStatement.class);
-        Mockito.when(this.connection.prepareStatement(OpensearchMetadataHandler.GET_PARTITIONS_QUERY)).thenReturn(preparedStatement);
 
         String[] columns = {"partition_name"};
         int[] types = {Types.VARCHAR};
@@ -211,7 +209,6 @@ public class OpensearchMetadataHandlerTest
         TableName tableName = new TableName("testSchema", "testTable");
 
         PreparedStatement preparedStatement = Mockito.mock(PreparedStatement.class);
-        Mockito.when(this.connection.prepareStatement(OpensearchMetadataHandler.GET_PARTITIONS_QUERY)).thenReturn(preparedStatement);
 
         String[] columns = {OpensearchMetadataHandler.PARTITION_COLUMN_NAME};
         int[] types = {Types.VARCHAR};
@@ -251,13 +248,11 @@ public class OpensearchMetadataHandlerTest
         GetTableLayoutRequest getTableLayoutRequest = new GetTableLayoutRequest(this.federatedIdentity, "testQueryId", "testCatalogName", tableName, constraints, partitionSchema, partitionCols);
 
         PreparedStatement preparedStatement = Mockito.mock(PreparedStatement.class);
-        Mockito.when(this.connection.prepareStatement(OpensearchMetadataHandler.GET_PARTITIONS_QUERY)).thenReturn(preparedStatement);
 
         String[] columns = {"partition_name"};
         int[] types = {Types.VARCHAR};
         Object[][] values = {{"p0"}, {"p1"}};
         ResultSet resultSet = mockResultSet(columns, types, values, new AtomicInteger(-1));
-        final String expectedQuery = String.format(OpensearchMetadataHandler.GET_PARTITIONS_QUERY, tableName.getTableName(), tableName.getSchemaName());
         Mockito.when(preparedStatement.executeQuery()).thenReturn(resultSet);
 
         Mockito.when(this.connection.getMetaData().getSearchStringEscape()).thenReturn(null);
