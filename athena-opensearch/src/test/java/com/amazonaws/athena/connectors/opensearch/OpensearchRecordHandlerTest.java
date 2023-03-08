@@ -54,7 +54,7 @@ import static org.mockito.ArgumentMatchers.nullable;
 
 public class OpensearchRecordHandlerTest
 {
-    private OpensearchRecordHandler mySqlRecordHandler;
+    private OpensearchRecordHandler opensearchRecordHandler;
     private Connection connection;
     private JdbcConnectionFactory jdbcConnectionFactory;
     private JdbcSplitQueryBuilder jdbcSplitQueryBuilder;
@@ -76,7 +76,7 @@ public class OpensearchRecordHandlerTest
         final DatabaseConnectionConfig databaseConnectionConfig = new DatabaseConnectionConfig("testCatalog", OPENSEARCH_NAME,
                 "opensearch://jdbc:opensearch://hostname/user=A&password=B");
 
-        this.mySqlRecordHandler = new OpensearchRecordHandler(databaseConnectionConfig, amazonS3, secretsManager, athena, jdbcConnectionFactory, jdbcSplitQueryBuilder, java.util.Map.of());
+        this.opensearchRecordHandler = new OpensearchRecordHandler(databaseConnectionConfig, amazonS3, secretsManager, athena, jdbcConnectionFactory, jdbcSplitQueryBuilder, java.util.Map.of());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class OpensearchRecordHandlerTest
         PreparedStatement expectedPreparedStatement = Mockito.mock(PreparedStatement.class);
         Mockito.when(this.connection.prepareStatement(Mockito.eq(expectedSql))).thenReturn(expectedPreparedStatement);
 
-        PreparedStatement preparedStatement = this.mySqlRecordHandler.buildSplitSql(this.connection, "testCatalogName", tableName, schema, constraints, split);
+        PreparedStatement preparedStatement = this.opensearchRecordHandler.buildSplitSql(this.connection, "testCatalogName", tableName, schema, constraints, split);
 
         Assert.assertEquals(expectedPreparedStatement, preparedStatement);
         Mockito.verify(preparedStatement, Mockito.times(1)).setInt(1, 1);

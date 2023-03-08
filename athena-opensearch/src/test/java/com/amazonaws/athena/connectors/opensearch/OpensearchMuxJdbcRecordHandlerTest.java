@@ -44,7 +44,7 @@ import java.util.Map;
 public class OpensearchMuxJdbcRecordHandlerTest
 {
     private Map<String, JdbcRecordHandler> recordHandlerMap;
-    private OpensearchRecordHandler mySqlRecordHandler;
+    private OpensearchRecordHandler opensearchRecordHandler;
     private JdbcRecordHandler jdbcRecordHandler;
     private AmazonS3 amazonS3;
     private AWSSecretsManager secretsManager;
@@ -55,8 +55,8 @@ public class OpensearchMuxJdbcRecordHandlerTest
     @Before
     public void setup()
     {
-        this.mySqlRecordHandler = Mockito.mock(OpensearchRecordHandler.class);
-        this.recordHandlerMap = Collections.singletonMap("opensearch", this.mySqlRecordHandler);
+        this.opensearchRecordHandler = Mockito.mock(OpensearchRecordHandler.class);
+        this.recordHandlerMap = Collections.singletonMap("opensearch", this.opensearchRecordHandler);
         this.amazonS3 = Mockito.mock(AmazonS3.class);
         this.secretsManager = Mockito.mock(AWSSecretsManager.class);
         this.athena = Mockito.mock(AmazonAthena.class);
@@ -75,7 +75,7 @@ public class OpensearchMuxJdbcRecordHandlerTest
         ReadRecordsRequest readRecordsRequest = Mockito.mock(ReadRecordsRequest.class);
         Mockito.when(readRecordsRequest.getCatalogName()).thenReturn("opensearch");
         this.jdbcRecordHandler.readWithConstraint(blockSpiller, readRecordsRequest, queryStatusChecker);
-        Mockito.verify(this.mySqlRecordHandler, Mockito.times(1)).readWithConstraint(Mockito.eq(blockSpiller), Mockito.eq(readRecordsRequest), Mockito.eq(queryStatusChecker));
+        Mockito.verify(this.opensearchRecordHandler, Mockito.times(1)).readWithConstraint(Mockito.eq(blockSpiller), Mockito.eq(readRecordsRequest), Mockito.eq(queryStatusChecker));
     }
 
     @Test(expected = RuntimeException.class)
@@ -100,6 +100,6 @@ public class OpensearchMuxJdbcRecordHandlerTest
         Constraints constraints = Mockito.mock(Constraints.class);
         Split split = Mockito.mock(Split.class);
         this.jdbcRecordHandler.buildSplitSql(jdbcConnection, "opensearch", tableName, schema, constraints, split);
-        Mockito.verify(this.mySqlRecordHandler, Mockito.times(1)).buildSplitSql(Mockito.eq(jdbcConnection), Mockito.eq("opensearch"), Mockito.eq(tableName), Mockito.eq(schema), Mockito.eq(constraints), Mockito.eq(split));
+        Mockito.verify(this.opensearchRecordHandler, Mockito.times(1)).buildSplitSql(Mockito.eq(jdbcConnection), Mockito.eq("opensearch"), Mockito.eq(tableName), Mockito.eq(schema), Mockito.eq(constraints), Mockito.eq(split));
     }
 }
