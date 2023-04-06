@@ -6,7 +6,7 @@
         <version>2022.47.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>athena-elasticsearch</artifactId>
+    <artifactId>athena-opensearch</artifactId>
     <version>2022.47.1</version>
     <dependencies>
         <dependency>
@@ -154,13 +154,13 @@
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-client</artifactId>
-            <version>8.5.3</version>
+            <version>7.13.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-high-level-client -->
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>7.10.2</version>
+            <version>7.13.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-elasticsearch -->
         <dependency>

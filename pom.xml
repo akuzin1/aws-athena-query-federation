@@ -90,16 +90,17 @@
         <module>athena-federation-sdk</module>
         <module>athena-federation-sdk-tools</module>
         <module>athena-federation-integ-test</module>
-        <module>athena-cloudwatch</module>
+        <!-- <module>athena-cloudwatch</module>
         <module>athena-cloudwatch-metrics</module>
         <module>athena-dynamodb</module>
         <module>athena-aws-cmdb</module>
         <module>athena-docdb</module>
         <module>athena-redis</module>
         <module>athena-hbase</module>
-        <module>athena-example</module>
+        <module>athena-example</module> -->
         <module>athena-elasticsearch</module>
-        <module>athena-tpcds</module>
+        <module>athena-opensearch</module>
+        <!-- <module>athena-tpcds</module>
         <module>athena-jdbc</module>
         <module>athena-mysql</module>
         <module>athena-postgresql</module>
@@ -122,7 +123,7 @@
         <module>athena-db2</module>
         <module>athena-msk</module>
         <module>athena-kafka</module>
-        <module>athena-gcs</module>
+        <module>athena-gcs</module> -->
     </modules>
     <dependencies>
         <dependency>
