@@ -113,4 +113,8 @@ public class DatabaseConnectionConfig
                 ", secret='" + secret + '\'' +
                 '}';
     }
+
+    public boolean isGlueConnection(){
+        return false;
+    }
 }

@@ -19,8 +19,15 @@
  */
 package com.amazonaws.athena.connectors.jdbc.connection;
 
+import com.amazonaws.ClientConfiguration;
+import com.amazonaws.services.glue.AWSGlue;
+import com.amazonaws.services.glue.AWSGlueClientBuilder;
+import com.amazonaws.services.glue.model.GetConnectionResult;
+import com.amazonaws.services.glue.model.GetConnectionRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +45,21 @@ public class DatabaseConnectionConfigBuilder
     public static final String DEFAULT_CONNECTION_STRING_PROPERTY = "default";
     private static final int MUX_CATALOG_LIMIT = 100;
 
+    public static final String DEFAULT_GLUE_CONNECTION = "glue_connection";
+    private static final int CONNECT_TIMEOUT = 250;
+    public static final String DEFAULT_JDBC_CONNECTION_URL_PROPERTY = "JDBC_CONNECTION_URL";
+    public static final String DEFAULT_PASSWORD_PROPERTY = "PASSWORD";
+    public static final String DEFAULT_USERNAME_PROPERTY = "USERNAME";
+    public static final String DEFAULT_SECRETS_PROPERTY = "SECRET_ID";
+
     private static final String CONNECTION_STRING_REGEX = "([a-zA-Z0-9]+)://(.*)";
+    private static final String GLUE_CONNECTION_STRING_REGEX = "jdbc:([a-zA-Z0-9]+)://(.*)";
     private static final Pattern CONNECTION_STRING_PATTERN = Pattern.compile(CONNECTION_STRING_REGEX);
+    private static final Pattern GLUE_CONNECTION_STRING_PATTERN = Pattern.compile(GLUE_CONNECTION_STRING_REGEX);
     private static final String SECRET_PATTERN_STRING = "\\$\\{([a-zA-Z0-9:/_+=.@-]+)}";
     public static final Pattern SECRET_PATTERN = Pattern.compile(SECRET_PATTERN_STRING);
+
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnectionConfigBuilder.class);
 
     private Map<String, String> properties;
 
@@ -87,7 +105,7 @@ public class DatabaseConnectionConfigBuilder
     public List<DatabaseConnectionConfig> build()
     {
         Validate.notEmpty(this.properties, "properties must not be empty");
-        Validate.notBlank(this.properties.get(DEFAULT_CONNECTION_STRING_PROPERTY), "Default connection string must be present");
+        // Validate.notBlank(this.properties.get(DEFAULT_CONNECTION_STRING_PROPERTY), "Default connection string must be present");
 
         List<DatabaseConnectionConfig> databaseConnectionConfigs = new ArrayList<>();
 
@@ -95,6 +113,7 @@ public class DatabaseConnectionConfigBuilder
         for (Map.Entry<String, String> property : this.properties.entrySet()) {
             final String key = property.getKey();
             final String value = property.getValue();
+            Map<String,String> connectionProperties = null;
 
             String catalogName;
             if (DEFAULT_CONNECTION_STRING_PROPERTY.equals(key.toLowerCase())) {
@@ -103,11 +122,18 @@ public class DatabaseConnectionConfigBuilder
             else if (key.endsWith(CONNECTION_STRING_PROPERTY_SUFFIX)) {
                 catalogName = key.replace(CONNECTION_STRING_PROPERTY_SUFFIX, "");
             }
+            else if (DEFAULT_GLUE_CONNECTION.equals(key.toLowerCase())){
+                AWSGlue awsGlue = AWSGlueClientBuilder.standard().withClientConfiguration(new ClientConfiguration().withConnectionTimeout(CONNECT_TIMEOUT)).build();
+                GetConnectionResult glueConnection = awsGlue.getConnection(new GetConnectionRequest().withName(value));
+                connectionProperties = glueConnection.getConnection().getConnectionProperties();
+                logger.info("---- {} Glue Connection has the following properties: {}", value, connectionProperties);
+                catalogName = DEFAULT_CONNECTION_STRING_PROPERTY;
+            }
             else {
                 // unknown property ignore
                 continue;
             }
-            databaseConnectionConfigs.add(extractDatabaseConnectionConfig(catalogName, value));
+            databaseConnectionConfigs.add(connectionProperties == null ? extractDatabaseConnectionConfig(catalogName, value) : extractGlueDatabaseConnectionConfig(catalogName, connectionProperties));
 
             numberOfCatalogs++;
             if (numberOfCatalogs > MUX_CATALOG_LIMIT) {
@@ -139,6 +165,30 @@ public class DatabaseConnectionConfigBuilder
 
         return optionalSecretName.map(s -> new DatabaseConnectionConfig(catalogName, this.engine, jdbcConnectionString, s))
                 .orElseGet(() -> new DatabaseConnectionConfig(catalogName, this.engine, jdbcConnectionString));
+    }
+
+    private DatabaseConnectionConfig extractGlueDatabaseConnectionConfig(final String catalogName, final Map<String, String> glueConnectionProperties)
+    {
+        final String jdbcConnectionString = glueConnectionProperties.get(DEFAULT_JDBC_CONNECTION_URL_PROPERTY);
+        final String username = glueConnectionProperties.get(DEFAULT_USERNAME_PROPERTY);
+        final String password = glueConnectionProperties.get(DEFAULT_PASSWORD_PROPERTY);
+        final String dbType;
+
+        Matcher m = GLUE_CONNECTION_STRING_PATTERN.matcher(jdbcConnectionString);
+        if (m.find() && m.groupCount() == 2) {
+            dbType = m.group(1);
+            logger.info("DbType is {}", dbType);
+        }
+        else {
+            throw new RuntimeException("Invalid connection String for Catalog " + catalogName);
+        }
+
+        Validate.notBlank(dbType, "Database type must not be blank.");
+        Validate.notBlank(jdbcConnectionString, "JDBC Connection string must not be blank.");
+
+        final String optionalSecretName = glueConnectionProperties.get(DEFAULT_SECRETS_PROPERTY);
+
+        return (optionalSecretName == null ? new DatabaseGlueConnectionConfig(catalogName, this.engine, jdbcConnectionString, username, password) : new DatabaseGlueConnectionConfig(catalogName, this.engine, jdbcConnectionString, username, password, optionalSecretName));
     }
 
     private Optional<String> extractSecretName(final String jdbcConnectionString)
