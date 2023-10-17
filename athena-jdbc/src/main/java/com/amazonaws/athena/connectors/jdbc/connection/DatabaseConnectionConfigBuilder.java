@@ -194,8 +194,9 @@ public class DatabaseConnectionConfigBuilder
     private Optional<String> extractSecretName(final String jdbcConnectionString)
     {
         Matcher secretMatcher = SECRET_PATTERN.matcher(jdbcConnectionString);
+        boolean isValidGroupCount = secretMatcher.groupCount() == 1 || secretMatcher.groupCount() == 2;
         String secretName = null;
-        if (secretMatcher.find() && secretMatcher.groupCount() == 1) {
+        if (secretMatcher.find() && isValidGroupCount) {
             secretName = secretMatcher.group(1);
         }
 
