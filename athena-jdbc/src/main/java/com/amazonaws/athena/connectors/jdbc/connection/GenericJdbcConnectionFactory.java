@@ -73,13 +73,22 @@ public class GenericJdbcConnectionFactory
     {
         final String derivedJdbcString;
         if (jdbcCredentialProvider != null) {
-            Matcher secretMatcher = SECRET_NAME_PATTERN.matcher(databaseConnectionConfig.getJdbcConnectionString());
-            derivedJdbcString = secretMatcher.replaceAll(Matcher.quoteReplacement(""));
+            if (databaseConnectionConfig.isGlueConnection()) {
+                derivedJdbcString = databaseConnectionConfig.getJdbcConnectionString();
+            }
+            else {
+                Matcher secretMatcher = SECRET_NAME_PATTERN.matcher(databaseConnectionConfig.getJdbcConnectionString());
+                derivedJdbcString = secretMatcher.replaceAll(Matcher.quoteReplacement(""));
+            }
 
             jdbcProperties.put("user", jdbcCredentialProvider.getCredential().getUser());
             jdbcProperties.put("password", jdbcCredentialProvider.getCredential().getPassword());
         }
         else {
+            if (databaseConnectionConfig.isGlueConnection() && databaseConnectionConfig.getSecret() == null) {
+                jdbcProperties.put("user", ((DatabaseGlueConnectionConfig) databaseConnectionConfig).getUsername());
+                jdbcProperties.put("password", ((DatabaseGlueConnectionConfig) databaseConnectionConfig).getPassword());
+            }
             derivedJdbcString = databaseConnectionConfig.getJdbcConnectionString();
         }
 
